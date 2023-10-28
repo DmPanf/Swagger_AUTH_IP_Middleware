@@ -154,3 +154,65 @@ async def filter_ip(request: Request, call_next):
 ### Шаг 3: Обновление списка разрешенных IP во время выполнения
 Если вы хотите обновлять список IP без перезапуска FastAPI приложения, вы можете хранить их в глобальной переменной или другом хранилище, которое можно изменить во время выполнения. В этом случае Telegram-бот может просто модифицировать эту глобальную переменную.
 
+---
+## To implement a solution using middleware to check the client's IP address, you can follow these steps:
+
+1. Create a middleware function that takes the request and the client's IP address as input. This function should check if the client's IP address is in the allowed list of IP addresses stored in a file. If the IP address is not in the list, the middleware function should return an HTTP status code indicating that the request is unauthorized.
+2. In your FastAPI application, use the `middleware` decorator to apply the middleware function to each endpoint. For example:
+```python
+from fastapi import FastAPI, middleware
+
+app = FastAPI()
+
+@app.middleware("before")
+def check_ip(request: Request) -> Response:
+    ip_address = request.client_addr
+    with open("allowed_ips.txt", "r") as f:
+        allowed_ips = [line.strip() for line in f.readlines()]
+    if ip_address not in allowed_ips:
+        return Response(status_code=403, reason="Unauthorized IP address")
+    return None
+```
+In this example, the `check_ip` middleware function checks the client's IP address against the list of allowed IP addresses stored in the "allowed_ips.txt" file. If the client's IP address is not in the list, it returns an HTTP status code 403 (Unauthorized) with a reason message.
+3. To add IP addresses to the file via an AIOGram-based Telegram bot, you can use the `asyncio` module and the `aiohttp` library to create an asynchronous client that can send requests to the Telegram bot. Here's an example of how you could do this:
+```python
+import asyncio
+from aiohttp import ClientSession
+
+async def add_ip(ip: str) -> None:
+    # Send a POST request to the Telegram bot with the IP address
+    session = ClientSession()
+    response = await session.post("https://example.com/add_ip", data={"ip": ip})
+    if response.status == 200:
+        print(f"Added {ip} to allowed list")
+    else:
+        print(f"Failed to add {ip} to allowed list")
+
+async def main() -> None:
+    # Create a loop to check for new IP addresses every X seconds
+    while True:
+        await asyncio.sleep(60)  # Check for new IP addresses every minute
+        await add_ip("")  # Add the empty string to the list of allowed IP addresses
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+In this example, the `add_ip` function sends a POST request to the Telegram bot with the IP address, and the `main` function creates a loop that checks for new IP addresses every minute using the `asyncio.sleep()` function. The `add_ip` function adds the empty string to the list of allowed IP addresses if the request was successful.
+4. To load the list of allowed IP addresses from the file, you can use the `ast.literal_eval()` function to parse the file contents as a Python expression and evaluate it to a list. Here's an example of how you could do this:
+```python
+with open("allowed_ips.txt", "r") as f:
+    allowed_ips = ast.literal_eval(f.read())
+```
+In this example, the `ast.literal_eval()` function parses the file contents as a Python expression and evaluates it to a list of IP addresses.
+5. To check if the client's IP address is in the list of allowed IP addresses, you can use the `in` operator in your middleware function. Here's an example of how you could do this:
+```python
+if ip_address in allowed_ips:
+    # The client's IP address is in the list of allowed IP addresses
+    pass
+else:
+    # The client's IP address is not in the list of allowed IP addresses
+    return Response(status_code=403, reason="Unauthorized IP address")
+```
+In this example, the `in` operator checks if the client's IP address is in the list of allowed IP addresses. If it is, the middleware function does nothing; otherwise, it returns an HTTP status code 403 (Unauthorized) with a reason message.
+
+By combining these steps, you can create a solution that checks the client's IP address against a list of allowed IP addresses stored in a file using FastAPI middleware.
