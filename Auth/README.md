@@ -1,3 +1,20 @@
+# Examples of implementing the following measures to protect Swagger UI endpoints from unauthorized access:
+
+1. Use authentication and authorization: Implement authentication and authorization mechanisms to ensure that only authorized users can access your Swagger UI endpoints. You can use popular libraries like `fastapi-auth` or `fastapi-jwt` to handle authentication and authorization.
+2. Use rate limiting: Implement rate limiting to prevent excessive requests to your Swagger UI endpoints, which could be a sign of an attack. You can use libraries like `fastapi-limiter` to implement rate limiting.
+3. Use CORS policies: Implement Cross-Origin Resource Sharing (CORS) policies to allow or deny requests from different origins. This will help protect your endpoints from being accessed by unauthorized users. You can use libraries like `fastapi-cors` to implement CORS policies.
+4. Use SSL/TLS encryption: Encrypt your Swagger UI endpoints using SSL/TLS certificates to protect data in transit. This will help prevent eavesdropping and man-in-the-middle attacks.
+5. Implement password hashing: Store user passwords securely by hashing them using a suitable hashing algorithm, such as bcrypt or Argon2. This will help prevent unauthorized access to user accounts.
+6. Use secure cookies: Use secure cookies to store user sessions, and ensure that the cookie prefix is not predictable to prevent attacks like session hijacking.
+7. Implement input validation: Validate user inputs to prevent malicious attacks like SQL injection or cross-site scripting (XSS).
+8. Use a web application firewall (WAF): Use a WAF to protect your Swagger UI endpoints from known and unknown attacks. You can use libraries like `fastapi-waf` to implement WAF rules.
+9. Regularly update and patch your dependencies: Regularly update and patch your dependencies, including FastAPI and its dependencies, to ensure that you have the latest security fixes.
+10. Use a vulnerability scanner: Use a vulnerability scanner to identify potential vulnerabilities in your Swagger UI endpoints and address them before they can be exploited by attackers.
+
+By implementing these measures, you can significantly improve the security of your FastAPI application and protect it from unauthorized access and attacks.
+
+---
+
 ## Для защиты Swagger UI в приложениях FastAPI от несанкционированного доступа можно использовать несколько методов:
 
 ### Использование переменных окружения
