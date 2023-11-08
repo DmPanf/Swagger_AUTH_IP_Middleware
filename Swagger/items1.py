@@ -1,3 +1,5 @@
+# Использование Path параметров:
+
 from fastapi import FastAPI
 
 app = FastAPI()
