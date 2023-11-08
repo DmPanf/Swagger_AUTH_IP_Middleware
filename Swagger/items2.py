@@ -1,3 +1,5 @@
+# Использование Query параметров:
+
 from fastapi import FastAPI
 
 app = FastAPI()
